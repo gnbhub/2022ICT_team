@@ -3,6 +3,7 @@
 #define BLYNK_AUTH_TOKEN            "GN-2wNwz0_J_mnHFBG3bBTtmf3VyCGI0"
 
 #define BLYNK_PRINT Serial
+
 #define DHTTYPE DHT22
 #define DHTPIN 4
 
@@ -13,11 +14,9 @@
 #include "DHT.h"
 
 //조도센서
-#include <Wire.h>
-#include <BH1750FVI.h>
-BH1750FVI::eDeviceMode_t DEVICEMODE = BH1750FVI::k_DevModeContHighRes;
-// BH1750FVI 라이브러리 생성
-BH1750FVI LightSensor(DEVICEMODE);
+//#include <Wire.h>
+//#include <BH1750FVI.h>
+
 
 BlynkTimer timer;
 SoftwareSerial EspSerial(2, 3); // RX, TX
@@ -26,58 +25,64 @@ char auth[] = BLYNK_AUTH_TOKEN;
 char ssid[] = "beom6452";
 char pass[] = "01027306452";
  
-float h;
-float t;
-int lux;
 
 ESP8266 wifi(&EspSerial);
- 
+
 DHT dht(DHTPIN, DHTTYPE);
+
+const int soilSensorPin = A0;
  
 void setup()
 {
   Serial.begin(9600);
   delay(10);
- 
   EspSerial.begin(ESP8266_BAUD);
   delay(10);
+
  
   Blynk.begin(auth, wifi, ssid, pass);
+
+  dht.begin();
+  //LightSensor.begin();
+  
   timer.setInterval(1000L, myTimerEvent1);
   timer.setInterval(1000L, myTimerEvent2);
-  timer.setInterval(120L, myTimerEvent3);
-  dht.begin();
-  LightSensor.begin();
+  //timer.setInterval(1000L, myTimerEvent3);
+  timer.setInterval(1000L, myTimerEvent4);
 }
 
 void myTimerEvent1()
 {
+  float h = dht.readHumidity();
   Blynk.virtualWrite(V1, h);
+  Serial.print(h);
+  Serial.print(" ");
 }
  
 void myTimerEvent2()
 {
+  float t = dht.readTemperature();
   Blynk.virtualWrite(V0, t);
+  Serial.print(t);
+  Serial.print(" ");
 }
 
-void myTimerEvent3()
+
+//void myTimerEvent3()
+//{
+  //uint16_t lux = LightSensor.GetLightIntensity();
+  //Blynk.virtualWrite(V2, lux);
+  //Serial.println(lux);
+//}
+
+void myTimerEvent4()
 {
-  Blynk.virtualWrite(V2, lux);
+  Blynk.virtualWrite(V3, analogRead(soilSensorPin));
+  Serial.println(analogRead(soilSensorPin));
 }
 
 void loop()
 {
   Blynk.run();
   timer.run();
-  
-  h = dht.readHumidity();
-  t = dht.readTemperature();
-  uint16_t lux = LightSensor.GetLightIntensity();
-  
-  Serial.print(h);
-  Serial.print(" ");
-  Serial.print(t);
-  //Serial.print(" ");
-  //Serial.println(lux);
-  
 }
