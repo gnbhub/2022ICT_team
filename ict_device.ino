@@ -16,7 +16,7 @@
 #include <Wire.h>
 #include <BH1750.h>
 
-//BH1750 GY302;
+//BH1750 GY302;//센서 자체에 외부전원 공급 후 재시도, 단독으로 테스트 시에는 정상 작동, 데이터 확인 가능
 
 BlynkTimer timer;
 SoftwareSerial EspSerial(2, 3); // RX, TX
@@ -82,5 +82,5 @@ void myTimerEvent4()
 void loop()
 {
   Blynk.run();
-  timer.run();
+  timer.run();//setup()에서 등록한 타이머 함수 반복
 }
