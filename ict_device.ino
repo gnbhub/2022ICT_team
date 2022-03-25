@@ -1,6 +1,6 @@
-#define BLYNK_TEMPLATE_ID           "TMPLPNl_fI0M"
-#define BLYNK_DEVICE_NAME           "Quickstart Device"
-#define BLYNK_AUTH_TOKEN            "GN-2wNwz0_J_mnHFBG3bBTtmf3VyCGI0"
+#define BLYNK_TEMPLATE_ID "TMPLEd2j7E6G"
+#define BLYNK_DEVICE_NAME "ict_device"
+#define BLYNK_DEVICE_NAME "ict"
 
 #define BLYNK_PRINT Serial
 
@@ -22,8 +22,8 @@ BlynkTimer timer;
 SoftwareSerial EspSerial(2, 3); // RX, TX
  
 char auth[] = BLYNK_AUTH_TOKEN;
-char ssid[] = "beom6452";
-char pass[] = "01027306452";
+char ssid[] = "GNB";
+char pass[] = "gnb202109";
  
 
 ESP8266 wifi(&EspSerial);
@@ -31,7 +31,6 @@ ESP8266 wifi(&EspSerial);
 DHT dht(DHTPIN, DHTTYPE);
 
 const int soilSensorPin = A0;
-
 
 void setup()
 {
@@ -44,13 +43,11 @@ void setup()
   dht.begin();
   
   //GY302.begin();
-
   
   timer.setInterval(1000L, myTimerEvent1);
   timer.setInterval(1000L, myTimerEvent2);
   //timer.setInterval(1000L, myTimerEvent3);
   timer.setInterval(1000L, myTimerEvent4);
-  
 }
 
 void myTimerEvent1()
@@ -69,16 +66,12 @@ void myTimerEvent2()
   Serial.print(" ");
 }
 
-
 void myTimerEvent3()
 {
-  //uint16_t lux = GY302.readLightLevel();
-  Serial.print("Light: ");
-  //Serial.print(lux);
-  Serial.println(" lx");
-
-  delay(1000);
-  //Blynk.virtualWrite(V2, lux);
+  uint16_t lux = GY302.readLightLevel();
+  Blynk.virtualWrite(V2, lux);
+  Serial.print(lux);
+  Serial.print(" ");
 }
 
 void myTimerEvent4()
@@ -89,7 +82,6 @@ void myTimerEvent4()
 
 void loop()
 {
-
   Blynk.run();
   timer.run();
 }
