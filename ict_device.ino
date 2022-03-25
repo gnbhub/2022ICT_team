@@ -25,7 +25,6 @@ char auth[] = BLYNK_AUTH_TOKEN;
 char ssid[] = "GNB";
 char pass[] = "gnb202109";
  
-
 ESP8266 wifi(&EspSerial);
 
 DHT dht(DHTPIN, DHTTYPE);
