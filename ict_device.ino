@@ -1,6 +1,6 @@
 #define BLYNK_TEMPLATE_ID "TMPLEd2j7E6G"
 #define BLYNK_DEVICE_NAME "ict_device"
-#define BLYNK_DEVICE_NAME "ict"
+#define BLYNK_AUTH_TOKEN "65IA19Ca2P4OrlE6WVOn3fMrLPoO3A2Y"
 
 #define BLYNK_PRINT Serial
 
