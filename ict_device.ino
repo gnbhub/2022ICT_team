@@ -1,6 +1,6 @@
-#define BLYNK_TEMPLATE_ID "TMPLEd2j7E6G"
-#define BLYNK_DEVICE_NAME "ict_device"
-#define BLYNK_AUTH_TOKEN "65IA19Ca2P4OrlE6WVOn3fMrLPoO3A2Y"
+#define BLYNK_TEMPLATE_ID           "TMPLcS_h7atA"
+#define BLYNK_DEVICE_NAME           "ict device"
+#define BLYNK_AUTH_TOKEN            "gngABx23pDiDvurkvO2h77fG_Kt4ZK-z"
 
 #define BLYNK_PRINT Serial
 
@@ -12,11 +12,6 @@
 #include <BlynkSimpleShieldEsp8266.h>
 #include <SoftwareSerial.h>
 #include "DHT.h"
-
-#include <Wire.h>
-#include <BH1750.h>
-
-//BH1750 GY302;//센서 자체에 외부전원 공급 후 재시도, 단독으로 테스트 시에는 정상 작동, 데이터 확인 가능
 
 BlynkTimer timer;
 SoftwareSerial EspSerial(2, 3); // RX, TX
@@ -40,13 +35,25 @@ void setup()
   Blynk.begin(auth, wifi, ssid, pass);
 
   dht.begin();
-  
-  //GY302.begin();
-  
+
+  pinMode(12,OUTPUT);
+
   timer.setInterval(1000L, myTimerEvent1);
   timer.setInterval(1000L, myTimerEvent2);
-  //timer.setInterval(1000L, myTimerEvent3);
   timer.setInterval(1000L, myTimerEvent4);
+}
+
+BLYNK_WRITE(V4) {
+ int pinValue = param.asInt(); // Assigning incoming value from pin V3 to a variable
+ if (pinValue == 1) {
+    digitalWrite(12, HIGH); // Turn LED on.
+    Serial.println("");
+    Serial.println("LED ON");
+  } else {
+    digitalWrite(12, LOW); // Turn LED off.
+    Serial.println("");
+    Serial.println("LED OFF");
+ }
 }
 
 void myTimerEvent1()
@@ -56,20 +63,12 @@ void myTimerEvent1()
   Serial.print(h);
   Serial.print(" ");
 }
- 
+
 void myTimerEvent2()
 {
   float t = dht.readTemperature();
   Blynk.virtualWrite(V0, t);
   Serial.print(t);
-  Serial.print(" ");
-}
-
-void myTimerEvent3()
-{
-  uint16_t lux = GY302.readLightLevel();
-  Blynk.virtualWrite(V2, lux);
-  Serial.print(lux);
   Serial.print(" ");
 }
 
